@@ -1,0 +1,11 @@
+fr/glady/wedoogift/models/Gift$GiftBuilder.class
+fr/glady/wedoogift/managers/MealManager.class
+fr/glady/wedoogift/models/Gift.class
+fr/glady/wedoogift/models/User$UserBuilder.class
+fr/glady/wedoogift/models/User.class
+fr/glady/wedoogift/models/requests/GiftRequest.class
+fr/glady/wedoogift/WedoogiftApplication.class
+fr/glady/wedoogift/services/UserService.class
+fr/glady/wedoogift/managers/GiftManager.class
+fr/glady/wedoogift/models/requests/UserRequest.class
+fr/glady/wedoogift/controllers/UserController.class

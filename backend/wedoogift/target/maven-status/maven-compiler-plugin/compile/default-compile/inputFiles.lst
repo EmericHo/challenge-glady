@@ -1,0 +1,9 @@
+/Users/emerichoerner/workspace/back/challenge/backend/wedoogift/src/main/java/fr/glady/wedoogift/services/UserService.java
+/Users/emerichoerner/workspace/back/challenge/backend/wedoogift/src/main/java/fr/glady/wedoogift/managers/GiftManager.java
+/Users/emerichoerner/workspace/back/challenge/backend/wedoogift/src/main/java/fr/glady/wedoogift/WedoogiftApplication.java
+/Users/emerichoerner/workspace/back/challenge/backend/wedoogift/src/main/java/fr/glady/wedoogift/models/User.java
+/Users/emerichoerner/workspace/back/challenge/backend/wedoogift/src/main/java/fr/glady/wedoogift/models/requests/GiftRequest.java
+/Users/emerichoerner/workspace/back/challenge/backend/wedoogift/src/main/java/fr/glady/wedoogift/models/Gift.java
+/Users/emerichoerner/workspace/back/challenge/backend/wedoogift/src/main/java/fr/glady/wedoogift/models/requests/UserRequest.java
+/Users/emerichoerner/workspace/back/challenge/backend/wedoogift/src/main/java/fr/glady/wedoogift/controllers/UserController.java
+/Users/emerichoerner/workspace/back/challenge/backend/wedoogift/src/main/java/fr/glady/wedoogift/managers/MealManager.java
