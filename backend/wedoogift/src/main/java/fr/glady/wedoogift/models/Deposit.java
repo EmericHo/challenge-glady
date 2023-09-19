@@ -7,12 +7,14 @@ import java.time.LocalDate;
 
 @Data
 @Builder(toBuilder = true)
-public class Gift {
+public class Deposit {
 
     private double amount;
 
     private LocalDate depositDate;
 
     private String companyName;
+
+    private DepositType type;
 
 }

@@ -1,7 +1,7 @@
 package fr.glady.wedoogift.controllers;
 
 import fr.glady.wedoogift.models.User;
-import fr.glady.wedoogift.models.requests.GiftRequest;
+import fr.glady.wedoogift.models.requests.DepositRequest;
 import fr.glady.wedoogift.models.requests.UserRequest;
 import fr.glady.wedoogift.services.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,18 +26,19 @@ public class UserController {
         return userService.createUser(userRequest.getName());
     }
 
-    @PostMapping(path = "/gift")
+    @PostMapping(path = "/deposit")
     @ResponseStatus(HttpStatus.CREATED)
-    public User addGiftToUser(@RequestBody GiftRequest giftRequest) {
-        log.info("add gift to user with name : {}", giftRequest.getUsername());
-        return userService.addGiftToUser(giftRequest);
+    public User addDepositToUser(@RequestBody DepositRequest depositRequest) {
+        log.info("add deposit to user with name : {}", depositRequest.getUsername());
+        return userService.addDepositToUser(depositRequest);
     }
 
-    @GetMapping(path = "/gift/balance")
+    @GetMapping(path = "/deposit/balance")
     @ResponseStatus(HttpStatus.OK)
-    public double getGiftBalance(@RequestBody UserRequest userRequest) {
-        log.info("Get gift balance from user with name : {}", userRequest.getName());
-        return userService.getGiftBalanceFromUser(userRequest.getName());
+    public double getGiftBalance(@RequestBody DepositRequest depositRequest) {
+        log.info("Get deposit balance from user with name : {} and type : {}", depositRequest.getUsername(),
+                depositRequest.getType().toString());
+        return userService.getDepositBalanceFromUser(depositRequest.getUsername(), depositRequest.getType());
     }
 
 }

@@ -1,7 +1,8 @@
 package fr.glady.wedoogift.services;
 
-import fr.glady.wedoogift.managers.GiftManager;
-import fr.glady.wedoogift.models.Gift;
+import fr.glady.wedoogift.managers.DepositManager;
+import fr.glady.wedoogift.models.Deposit;
+import fr.glady.wedoogift.models.DepositType;
 import fr.glady.wedoogift.models.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,14 +18,14 @@ public class UserServiceTest {
 
     private UserService userService;
     private List<User> users;
-    
+
     @Mock
-    private GiftManager giftManager;
+    private DepositManager depositManager;
 
     @BeforeEach
     public void setUp() {
         users = new ArrayList<>();
-        userService = new UserService(giftManager);
+        userService = new UserService(depositManager);
     }
 
     @Test
@@ -55,22 +56,22 @@ public class UserServiceTest {
     @Test
     public void testGetGiftBalanceFromUserWhenUserExists() {
         String name = "John";
-        List<Gift> gifts = List.of(Gift.builder()
+        List<Deposit> gifts = List.of(Deposit.builder()
                 .depositDate(LocalDate.now().minusDays(200))
                 .amount(100.0)
                 .companyName("Tesla")
-                .build(), Gift.builder()
+                .build(), Deposit.builder()
                 .depositDate(LocalDate.now().minusDays(400))
                 .amount(50.0)
                 .companyName("Tesla")
                 .build());
         User existingUser = User.builder()
                 .name(name)
-                .gifts(gifts)
+                .deposits(gifts)
                 .build();
         users.add(existingUser);
 
-        double balance = userService.getGiftBalanceFromUser(name);
+        double balance = userService.getDepositBalanceFromUser(name, DepositType.GIFT);
 
         assertEquals(100.0, balance, 0.01);
     }
@@ -79,7 +80,7 @@ public class UserServiceTest {
     public void testGetGiftBalanceFromUserWhenUserDoesNotExist() {
         String name = "John";
 
-        double balance = userService.getGiftBalanceFromUser(name);
+        double balance = userService.getDepositBalanceFromUser(name, DepositType.GIFT);
 
         assertEquals(-1, balance, 0.01);
     }

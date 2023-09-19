@@ -11,7 +11,6 @@ public class User {
 
     private String name;
 
-    private List<Gift> gifts;
-    
+    private List<Deposit> deposits;
 
 }

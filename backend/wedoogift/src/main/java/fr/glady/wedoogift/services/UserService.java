@@ -1,9 +1,10 @@
 package fr.glady.wedoogift.services;
 
-import fr.glady.wedoogift.managers.GiftManager;
-import fr.glady.wedoogift.models.Gift;
+import fr.glady.wedoogift.managers.DepositManager;
+import fr.glady.wedoogift.models.Deposit;
+import fr.glady.wedoogift.models.DepositType;
 import fr.glady.wedoogift.models.User;
-import fr.glady.wedoogift.models.requests.GiftRequest;
+import fr.glady.wedoogift.models.requests.DepositRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -16,13 +17,13 @@ import java.util.List;
 @Service
 public class UserService {
 
-    private final GiftManager giftManager;
+    private final DepositManager depositManager;
     private static final List<User> users = new ArrayList<>();
 
     private static final int THRESHOLD_DAYS = 365;
 
-    public UserService(GiftManager giftManager) {
-        this.giftManager = giftManager;
+    public UserService(DepositManager depositManager) {
+        this.depositManager = depositManager;
     }
 
     /**
@@ -39,7 +40,7 @@ public class UserService {
         log.info("Create user with name: {}", name);
         User newUser = User.builder()
                 .name(name)
-                .gifts(Collections.emptyList())
+                .deposits(Collections.emptyList())
                 .build();
         users.add(newUser);
         log.info("User with name: {} added.", newUser.getName());
@@ -47,46 +48,39 @@ public class UserService {
     }
 
     /**
-     * Get gift balance from user.
+     * Get deposit balance from user.
      *
      * @param name the name
      * @return the balance
      */
-    public double getGiftBalanceFromUser(String name) {
+    public double getDepositBalanceFromUser(String name, DepositType type) {
         log.info("Get balance from user: {}", name);
         if (userExists(name)) {
             log.info("User with name : {} exists", name);
-
-            return users.stream()
-                    .filter(user -> user.getName().equalsIgnoreCase(name))
-                    .map(User::getGifts)
-                    .flatMap(List::stream)
-                    .filter(gift -> checkDateIsYoungerThan365Days(gift.getDepositDate()))
-                    .map(Gift::getAmount)
-                    .mapToDouble(Double::doubleValue)
-                    .sum();
+            return getBalance(name, type);
         }
         log.info("User with name : {} not exists", name);
         throw new NullPointerException();
     }
 
     /**
-     * Add gift to a user.
+     * Add deposit to a user.
      *
-     * @param giftRequest the request
+     * @param depositRequest the request
      * @return the user
      */
-    public User addGiftToUser(GiftRequest giftRequest) {
-        log.info("Add gift to user with name : {}", giftRequest.getUsername());
-        if (userExists(giftRequest.getUsername())) {
+    public User addDepositToUser(DepositRequest depositRequest) {
+        log.info("Add deposit to user with name : {}", depositRequest.getUsername());
+        if (userExists(depositRequest.getUsername())) {
 
-            User user = findUserWithName(giftRequest.getUsername());
-            User updatedUser = giftManager.giftDeposit(user, giftRequest.getCompanyName(), giftRequest.getAmount());
+            User user = findUserWithName(depositRequest.getUsername());
+            User updatedUser = depositManager.addDeposit(user, depositRequest.getCompanyName(),
+                    depositRequest.getAmount(), depositRequest.getType());
             users.remove(user);
             users.add(updatedUser);
             return updatedUser;
         }
-        log.info("User with name : {} not exists", giftRequest.getUsername());
+        log.info("User with name : {} not exists", depositRequest.getUsername());
         throw new NullPointerException();
     }
 
@@ -107,6 +101,30 @@ public class UserService {
                 toCompareDate.toEpochDay());
         long dayDifference = LocalDate.now().toEpochDay() - toCompareDate.toEpochDay();
         return dayDifference < THRESHOLD_DAYS;
+    }
+
+    private boolean checkDateIsYoungerThanGivenDate(LocalDate toCompareDate) {
+        log.info("Check difference between given date : {} and saved : {}", LocalDate.now().toEpochDay(),
+                toCompareDate.toEpochDay());
+        long dayDifference = LocalDate.of(2024, 2, 28).toEpochDay() - toCompareDate.toEpochDay();
+        return dayDifference > 0;
+    }
+
+    private double getBalance(String name, DepositType type) {
+        return users.stream()
+                .filter(user -> user.getName().equalsIgnoreCase(name))
+                .map(User::getDeposits)
+                .flatMap(List::stream)
+                .filter(deposit -> deposit.getType().equals(type))
+                .filter(deposit -> {
+                    if (type.equals(DepositType.GIFT)) {
+                        return checkDateIsYoungerThan365Days(deposit.getDepositDate());
+                    }
+                    return checkDateIsYoungerThanGivenDate(deposit.getDepositDate());
+                })
+                .map(Deposit::getAmount)
+                .mapToDouble(Double::doubleValue)
+                .sum();
     }
 
 }
