@@ -92,14 +92,14 @@ public class UserService {
     }
 
     private boolean userExists(String name) {
-        return users.stream()
+        return !users.isEmpty() && users.stream()
                 .anyMatch(user -> user.getName().equalsIgnoreCase(name));
     }
 
     private boolean checkDateIsYoungerThan365Days(LocalDate toCompareDate) {
         log.info("Check difference between date now : {} and saved : {}", LocalDate.now().toEpochDay(),
                 toCompareDate.toEpochDay());
-        long dayDifference = LocalDate.now().toEpochDay() - toCompareDate.toEpochDay();
+        long dayDifference = toCompareDate.toEpochDay() - LocalDate.now().toEpochDay();
         return dayDifference < THRESHOLD_DAYS;
     }
 
